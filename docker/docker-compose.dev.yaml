@@ -486,7 +486,7 @@ services:
 
   # The postgres database.
   db:
-    image: postgres:15-alpine
+    image: registry.cn-shenzhen.aliyuncs.com/fcyai/postgres:15-alpine
     restart: always
     environment:
       PGUSER: ${PGUSER:-postgres}
@@ -511,7 +511,7 @@ services:
 
   # The redis cache.
   redis:
-    image: redis:6-alpine
+    image: registry.cn-shenzhen.aliyuncs.com/fcyai/redis:6-alpine
     restart: always
     environment:
       REDISCLI_AUTH: ${REDIS_PASSWORD:-difyai123456}
@@ -575,7 +575,7 @@ services:
   # for more information, please refer to
   # https://docs.dify.ai/learn-more/faq/install-faq#id-18.-why-is-ssrf_proxy-needed
   ssrf_proxy:
-    image: ubuntu/squid:latest
+    image: registry.cn-shenzhen.aliyuncs.com/fcyai/ubuntu-squid:latest
     restart: always
     volumes:
       - ./ssrf_proxy/squid.conf.template:/etc/squid/squid.conf.template
@@ -595,7 +595,7 @@ services:
   # The nginx reverse proxy.
   # used for reverse proxying the API service and Web service.
   nginx:
-    image: nginx:latest
+    image: registry.cn-shenzhen.aliyuncs.com/fcyai/nginx:latest
     restart: always
     volumes:
       - ./nginx/nginx.conf.template:/etc/nginx/nginx.conf.template
@@ -635,7 +635,7 @@ services:
   # Qdrant vector store.
   # (if used, you need to set VECTOR_STORE to qdrant in the api & worker service.)
   qdrant:
-    image: langgenius/qdrant:v1.7.3
+    image: registry.cn-shenzhen.aliyuncs.com/fcyai/qdrant:v1.7.3
     profiles:
       - qdrant
     restart: always
