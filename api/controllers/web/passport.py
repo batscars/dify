@@ -35,17 +35,32 @@ class PassportResource(Resource):
         app_model = db.session.query(App).filter(App.id == site.app_id).first()
         if not app_model or app_model.status != "normal" or not app_model.enable_site:
             raise NotFound()
+        external_user_id = request.args.get('externalUserId')
+        if external_user_id:
+            end_user = db.session.query(EndUser).filter(
+                EndUser.external_user_id == external_user_id).first()
+            if not end_user:
+                end_user = EndUser(
+                    tenant_id=app_model.tenant_id,
+                    app_id=app_model.id,
+                    type="browser",
+                    is_anonymous=True,
+                    session_id=generate_session_id(),
+                    external_user_id=external_user_id
+                )
 
-        end_user = EndUser(
-            tenant_id=app_model.tenant_id,
-            app_id=app_model.id,
-            type="browser",
-            is_anonymous=True,
-            session_id=generate_session_id(),
-        )
-
-        db.session.add(end_user)
-        db.session.commit()
+                db.session.add(end_user)
+                db.session.commit()
+        else:
+            end_user = EndUser(
+                tenant_id=app_model.tenant_id,
+                app_id=app_model.id,
+                type="browser",
+                is_anonymous=True,
+                session_id=generate_session_id(),
+            )
+            db.session.add(end_user)
+            db.session.commit()
 
         payload = {
             "iss": site.app_id,
@@ -54,7 +69,7 @@ class PassportResource(Resource):
             "app_code": app_code,
             "end_user_id": end_user.id,
         }
-
+        print(end_user.id)
         tk = PassportService().issue(payload)
 
         return {
