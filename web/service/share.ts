@@ -262,8 +262,8 @@ export const textToAudioStream = (url: string, isPublicAPI: boolean, header: { c
   return (getAction('post', !isPublicAPI))(url, { body, header }, { needAllResponseContent: true })
 }
 
-export const fetchAccessToken = async (appCode: string) => {
+export const fetchAccessToken = async (appCode: string, params?: Record<string, string>) => {
   const headers = new Headers()
   headers.append('X-App-Code', appCode)
-  return get('/passport', { headers }) as Promise<{ access_token: string }>
+  return get('/passport', { headers, params }) as Promise<{ access_token: string }>
 }

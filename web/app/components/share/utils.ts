@@ -3,6 +3,8 @@ import { fetchAccessToken } from '@/service/share'
 
 export const checkOrSetAccessToken = async () => {
   const sharedToken = globalThis.location.pathname.split('/').slice(-1)[0]
+  const searchParams = new URLSearchParams(globalThis.location.search)
+  const headImage = searchParams.get('headImage')
   const accessToken = localStorage.getItem('token') || JSON.stringify({ [sharedToken]: '' })
   let accessTokenJson = { [sharedToken]: '' }
   try {
@@ -12,9 +14,11 @@ export const checkOrSetAccessToken = async () => {
 
   }
   if (!accessTokenJson[sharedToken]) {
-    const res = await fetchAccessToken(sharedToken)
+    const res = await fetchAccessToken(sharedToken, { externalUserId: searchParams.get('externalUserId') || '' })
     accessTokenJson[sharedToken] = res.access_token
     localStorage.setItem('token', JSON.stringify(accessTokenJson))
+    if (headImage !== null && headImage !== undefined)
+      localStorage.setItem('headImage', headImage)
   }
 }
 
@@ -50,4 +54,9 @@ export const removeAccessToken = () => {
 
   delete accessTokenJson[sharedToken]
   localStorage.setItem('token', JSON.stringify(accessTokenJson))
+}
+
+export const getQueryParam = (param: string): string | null => {
+  const searchParams = new URLSearchParams(globalThis.location.search)
+  return searchParams.get(param)
 }

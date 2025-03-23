@@ -194,6 +194,13 @@ const ChatWrapper = () => {
       imageUrl={appData.site.icon_url}
     />
     : null
+  const headImage = localStorage.getItem('headImage')
+  const questionIcon = headImage
+    ? <AnswerIcon
+      iconType='image'
+      imageUrl={headImage}
+    />
+    : null
 
   return (
     <div
@@ -222,6 +229,7 @@ const ChatWrapper = () => {
         onFeedback={handleFeedback}
         suggestedQuestions={suggestedQuestions}
         answerIcon={answerIcon}
+        questionIcon={questionIcon}
         hideProcessDetail
         themeBuilder={themeBuilder}
         switchSibling={siblingMessageId => setTargetMessageId(siblingMessageId)}
